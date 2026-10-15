@@ -15,10 +15,11 @@ public class AvisoNombre extends javax.swing.JDialog {
     /**
      * Creates new form AvisoNombre
      */
-    public AvisoNombre(java.awt.Frame parent, boolean modal) {
+    public AvisoNombre(java.awt.Frame parent, boolean modal,String mensaje) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
+        jLabel1.setText(mensaje);
     }
 
     /**

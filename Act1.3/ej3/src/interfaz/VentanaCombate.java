@@ -4,6 +4,8 @@
  */
 package interfaz;
 
+import logica.Barbaro;
+import logica.Jefe;
 import logica.Personaje;
 
 /**
@@ -11,37 +13,39 @@ import logica.Personaje;
  * @author alumno
  */
 public class VentanaCombate extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaCombate.class.getName());
-    Personaje pj;
+    private String linea = "\n-----------------------------------------------------------\n";
+    private Personaje pj;
+    private Jefe boss = new Jefe("Cho'Gall");
+
     /**
      * Creates new form VentanaCombate
-     * @param pj
+     *
+     * @param pjEntrante
      */
-    public VentanaCombate(Personaje pj) {
+    public VentanaCombate(Personaje pjEntrante) {
         initComponents();
+
+        this.setLocationRelativeTo(null);
         
-        System.out.println("Ventana combate iniciada"
-                + "\n INFO PJ"
-                + pj.toString());
+        System.out.println("BOSS DATA: \n" + boss.toString());//DEBUG LINE
         
-        String aux = pj.getNombre();
-        System.out.println("Nombre:"+ aux);
-        nameLabel.setText(aux);
+        this.pj = pjEntrante;
+
+        //Actualizar estadisticas en la interfaz
+        pjStarter(pj);
+        bossStarter();
+        //NOMBRE BOTON 
+        nombreBotonSetter(pj);
+
+        //DEBUG
+        System.out.println(linea + "Ventana combate iniciada" + linea
+                + "\n INFO PJ: " + pj.toString());
         
-        
-        aux = Integer.toString(pj.getFuerza());
-        System.out.println(aux);
-        fuerzaLabel.setText(aux);
-        
-        aux = Integer.toString(pj.getVida());
-        System.out.println(aux);
-        vidaLabel.setText(aux);
-        
-        aux = Integer.toString(pj.getDefensa());
-        System.out.println(aux);
-        defensaLabel.setText(aux);
-                
+        //
+        textArea.setText(linea + "COMIENZA EL COMBATE" + linea);
+
     }
 
     /**
@@ -58,13 +62,47 @@ public class VentanaCombate extends javax.swing.JFrame {
         fuerzaLabel = new javax.swing.JLabel();
         defensaLabel = new javax.swing.JLabel();
         atacarButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textArea = new javax.swing.JTextArea();
+        nameBossLabel = new javax.swing.JLabel();
+        defensaBossLabel = new javax.swing.JLabel();
+        fuerzaBossLabel = new javax.swing.JLabel();
+        vidaBossLabel = new javax.swing.JLabel();
+        especialButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        nameLabel.setText("Nombre");
 
+        vidaLabel.setText("Vida");
+
+        fuerzaLabel.setText("Fuerza");
+
+        defensaLabel.setText("Defensa");
+
+        atacarButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         atacarButton.setText("ATACAR");
         atacarButton.addActionListener(this::atacarButtonActionPerformed);
+
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        textArea.setColumns(20);
+        textArea.setRows(5);
+        textArea.setEnabled(false);
+        jScrollPane1.setViewportView(textArea);
+
+        nameBossLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        nameBossLabel.setText("Nombre");
+
+        defensaBossLabel.setText("Defensa");
+
+        fuerzaBossLabel.setText("fuer");
+
+        vidaBossLabel.setText("vida");
+
+        especialButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        especialButton.setText("ESPECIAL");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -72,44 +110,149 @@ public class VentanaCombate extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(defensaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fuerzaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(vidaLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(nameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(atacarButton, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-                .addContainerGap(274, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(especialButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(defensaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fuerzaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(vidaLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(atacarButton, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fuerzaBossLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(vidaBossLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nameBossLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(defensaBossLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(nameBossLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(vidaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(vidaBossLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(fuerzaBossLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(fuerzaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(vidaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(fuerzaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(defensaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(defensaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(defensaBossLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(atacarButton)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(especialButton)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void atacarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atacarButtonActionPerformed
-        // TODO add your handling code here:
+        try {
+
+            textArea.append(linea + pj.ataca(boss));
+            bossStarter();
+            Thread.sleep(1000);
+            textArea.append("\n" + boss.ataca(pj) + linea);
+            pjStarter(pj);
+
+            if (!pj.vivo() && !boss.vivo()) {
+                textArea.append(linea + "EMPATE" + linea);
+            } else if (!pj.vivo()) {
+                textArea.append(linea + boss.getNombre() + " GANA" + linea);
+            } else if (!boss.vivo()) {
+                textArea.append(linea + pj.getNombre() + " GANA" + linea);
+            }
+
+        } catch (InterruptedException ex) {
+            System.getLogger(VentanaCombate.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
+
     }//GEN-LAST:event_atacarButtonActionPerformed
 
-    
+    /*Metodo coge el nombre de la clase de pj ex:(logica.Barbaro), lo divide y lo guarda en un array. 
+    Despues coge el nombre de la clase en un String array y recoge ese String y lo compara en un switch*/
+    private void nombreBotonSetter(Personaje pj) {
+        String[] array;
+        array = pj.getClass().getTypeName().split("logica.");
+        System.out.println(array[0]);
+
+        switch (array[1]) {
+            case "Barbaro":
+                especialButton.setText("FURIA");
+                break;
+            case "Picaro":
+                especialButton.setText("CAPA Y ESPADA");
+                break;
+            case "Clerigo":
+                especialButton.setText("NOVA CURATIVA");
+                break;
+            default:
+                especialButton.setText(" ");
+        }
+    }
+
+    //DATOS EN LABEL PERSONAJES
+    //Actualiza los datos del personaje en las label
+    private void pjStarter(Personaje pj) {
+        //PJ
+        String aux = pj.getNombre();
+        nameLabel.setText(aux);
+
+        aux = Integer.toString(pj.getFuerza());
+        fuerzaLabel.setText("Fuerza: " + aux);
+
+        aux = Integer.toString(pj.getVida());
+        vidaLabel.setText("Vida: " + aux);
+
+        aux = Integer.toString(pj.getDefensa());
+        defensaLabel.setText("Defensa: " + aux);
+
+    }
+
+    //Actualiza los datos del boss en las label
+    private void bossStarter() {
+        //BOSS
+        String aux = boss.getNombre();
+        nameBossLabel.setText(aux);
+
+        aux = Integer.toString(boss.getFuerza());
+        fuerzaBossLabel.setText("Fuerza: " + aux);
+
+        aux = Integer.toString(boss.getVida());
+        vidaBossLabel.setText("Vida: " + aux);
+
+        aux = Integer.toString(boss.getDefensa());
+        defensaBossLabel.setText("Defensa: " + aux);
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton atacarButton;
+    private javax.swing.JLabel defensaBossLabel;
     private javax.swing.JLabel defensaLabel;
+    private javax.swing.JButton especialButton;
+    private javax.swing.JLabel fuerzaBossLabel;
     private javax.swing.JLabel fuerzaLabel;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel nameBossLabel;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextArea textArea;
+    private javax.swing.JLabel vidaBossLabel;
     private javax.swing.JLabel vidaLabel;
     // End of variables declaration//GEN-END:variables
 }

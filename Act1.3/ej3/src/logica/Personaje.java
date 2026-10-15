@@ -16,7 +16,7 @@ public abstract class Personaje {
 
     public Personaje(String nombre) {
         this.nombre = nombre;
-        this.fuerza = (int) (Math.random() * (10 - 3 + 1) + 3);//
+        this.fuerza = (int) (Math.random() * (10 - 3 + 1) + 3);//min 3 max 10
         this.defensa = (int) (Math.random() * (5  + 1)); // Min 0
         this.vida = 10;
     }
@@ -81,7 +81,7 @@ public abstract class Personaje {
 
         int defensaDefensor = defender.getDefensa();
         int daño;
-        double hit = Math.random() * 1;
+        double hit = Math.random() ;
 
         //Comprueba si el golpe acierta o no
         if (hit >= 0.7) {
@@ -113,4 +113,6 @@ public abstract class Personaje {
 
         return (nombre + " ataca a " + defender.getNombre() + " pero falla el golpe");
     }
+    
+    
 }

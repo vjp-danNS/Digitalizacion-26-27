@@ -155,30 +155,34 @@ public class VentanaSeleccion extends javax.swing.JFrame {
         String nombre = nombreTextField.getText();
         
         
+        
 
         if (nombre.isBlank()) {
-            new AvisoNombre(VentanaSeleccion.this,true).setVisible(true);
+            new AvisoNombre(VentanaSeleccion.this,true,"ELIGE UN NOMBRE DE PERSONAJE").setVisible(true);
             
         } else {
             switch (clase) {
                 case "Barbaro":
                     Barbaro barbaro = new Barbaro(nombre);
                     System.out.println(barbaro.toString()); //DEBUG LINE
-                    new VentanaCombate(barbaro).setVisible(true);
+                    new VentanaCombate(barbaro).setVisible(true);   
+                    VentanaSeleccion.this.dispose();
                     break;
 
                 case "Picaro":
                     Picaro picaro = new Picaro(nombre);
                     System.out.println(picaro.toString()); //DEBUG LINE
                     new VentanaCombate(picaro).setVisible(true);
+                    VentanaSeleccion.this.dispose();
                     break;
                 case "Clerigo":
                     Clerigo clerigo = new Clerigo(nombre);
                     System.out.println(clerigo.toString()); //DEBUG LINE
                     new VentanaCombate(clerigo).setVisible(true);
+                    VentanaSeleccion.this.dispose();
                     break;
                 default:
-
+                    
             }
         }
     }//GEN-LAST:event_pelearBotonActionPerformed
